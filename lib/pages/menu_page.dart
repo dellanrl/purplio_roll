@@ -67,7 +67,8 @@ class MenuPage extends StatelessWidget {
               ),
               children: [
                 const TextSpan(
-                  text: 'At Purplio Roll, we take the traditional Lumpia and elevate it into a modern dessert masterpiece. Our signature ',
+                  text:
+                      'At Purplio Roll, we take the traditional Lumpia and elevate it into a modern dessert masterpiece. Our signature ',
                 ),
                 TextSpan(
                   text: 'Ubi Ungu',
@@ -79,7 +80,8 @@ class MenuPage extends StatelessWidget {
                   ),
                 ),
                 const TextSpan(
-                  text: ' (Purple Yam) filling is creamy, vibrant, and wrapped in a delicate, shattered-glass crispy shell. It is a symphony of textures - smooth, crunchy, and indulgent.',
+                  text:
+                      ' (Purple Yam) filling is creamy, vibrant, and wrapped in a delicate, shattered-glass crispy shell. It is a symphony of textures - smooth, crunchy, and indulgent.',
                 ),
               ],
             ),
@@ -99,7 +101,11 @@ class MenuPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              const Icon(Icons.auto_awesome, color: Color(0xFF341452), size: 20),
+              const Icon(
+                Icons.auto_awesome,
+                color: Color(0xFF341452),
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Artisan Crafted',
@@ -129,8 +135,27 @@ class MenuPage extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Center(
-              child: Icon(Icons.image, size: 80, color: Colors.grey),
+            child: Image.network(
+              'https://imgur.com/AGZkpHO',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.image, size: 80, color: Colors.grey),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Gagal memuat gambar',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -195,7 +220,12 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(String name, String description, String price, bool isBestSeller) {
+  Widget _buildMenuItem(
+    String name,
+    String description,
+    String price,
+    bool isBestSeller,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -232,7 +262,10 @@ class MenuPage extends StatelessWidget {
                   top: 16,
                   left: 16,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF341452),
                       borderRadius: BorderRadius.circular(24),
@@ -253,7 +286,10 @@ class MenuPage extends StatelessWidget {
                 top: 16,
                 right: 16,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFCD400),
                     borderRadius: BorderRadius.circular(24),
@@ -316,11 +352,7 @@ class MenuPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(
-                        Icons.add,
-                        color: Color(0xFF341452),
-                        size: 20,
-                      ),
+                      const Icon(Icons.add, color: Color(0xFF341452), size: 20),
                     ],
                   ),
                 ),

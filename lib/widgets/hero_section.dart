@@ -9,9 +9,7 @@ class HeroSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       constraints: const BoxConstraints(minHeight: 795),
-      decoration: const BoxDecoration(
-        color: Color(0xFFFCF8F9),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFFFCF8F9)),
       child: Stack(
         children: [
           // Background decorative elements
@@ -48,7 +46,10 @@ class HeroSection extends StatelessWidget {
                 const SizedBox(height: 40),
                 // Badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFE8DFF2),
                     borderRadius: BorderRadius.circular(24),
@@ -118,7 +119,9 @@ class HeroSection extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: 10,
-                        shadowColor: const Color(0xFF705D00).withValues(alpha: 0.1),
+                        shadowColor: const Color(
+                          0xFF705D00,
+                        ).withValues(alpha: 0.1),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -176,10 +179,7 @@ class HeroSection extends StatelessWidget {
                       height: 600,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 8,
-                        ),
+                        border: Border.all(color: Colors.white, width: 8),
                         boxShadow: [
                           BoxShadow(
                             color: const Color(0x4C341452),
@@ -191,15 +191,9 @@ class HeroSection extends StatelessWidget {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(
-                              Icons.image,
-                              size: 80,
-                              color: Colors.grey,
-                            ),
-                          ),
+                        child: Image.network(
+                          'https://i.imgur.com/AGZkpHO.png',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

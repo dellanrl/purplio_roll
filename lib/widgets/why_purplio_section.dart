@@ -38,10 +38,7 @@ class WhyPurplioSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: const Color(0xFFF3E8FF),
-                width: 1,
-              ),
+              border: Border.all(color: const Color(0xFFF3E8FF), width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,15 +62,33 @@ class WhyPurplioSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Container(
-                  width: double.infinity,
-                  height: 192,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.grey[300],
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.image, size: 60, color: Colors.grey),
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.grey[300],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.network(
+                        'https://i.imgur.com/qW9HYOv.png',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image,
+                                size: 60,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -172,23 +187,26 @@ class WhyPurplioSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: const Color(0xFFF3E8FF),
-                width: 1,
-              ),
+              border: Border.all(color: const Color(0xFFF3E8FF), width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 192,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.grey[300],
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.image, size: 60, color: Colors.grey),
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.grey[300],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.network(
+                        'https://i.imgur.com/qW9HYOv.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),

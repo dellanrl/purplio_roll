@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'pages/home_page.dart';
+import 'pages/menu_page.dart';
+import 'pages/vision_page.dart';
+import 'pages/contact_page.dart';
 
-void main() => runApp(const PurplioRollApp());
+void main() {
+  runApp(const PurplioRollApp());
+}
 
 class PurplioRollApp extends StatelessWidget {
   const PurplioRollApp({super.key});
@@ -10,13 +15,20 @@ class PurplioRollApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Purplio Roll',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.fredokaTextTheme(), // Gaya ceria ala Good Day
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF9575CD)),
+        primaryColor: const Color(0xFF341452),
+        scaffoldBackgroundColor: const Color(0xFFFCF8F9),
+        textTheme: GoogleFonts.plusJakartaSansTextTheme(),
       ),
-      home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/menu': (context) => const MenuPage(),
+        '/vision': (context) => const VisionPage(),
+        '/contact': (context) => const ContactPage(),
+      },
     );
   }
 }

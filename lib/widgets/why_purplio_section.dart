@@ -97,7 +97,9 @@ class _WhyPurplioSectionState extends State<WhyPurplioSection> {
                     boxShadow: [
                       BoxShadow(
                         color: isHovered 
+                            // ignore: deprecated_member_use
                             ? const Color(0xFF341452).withOpacity(0.08) 
+                            // ignore: deprecated_member_use
                             : const Color(0xFF341452).withOpacity(0.03), // Memperbaiki penulisan const dengan opacity
                         blurRadius: isHovered ? 12 : 6,
                         offset: const Offset(0, 4),

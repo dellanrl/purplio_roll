@@ -10,7 +10,7 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80), // Sesuaikan dengan tinggi top bar-mu
+        preferredSize: const Size.fromHeight(83), // Sesuaikan dengan tinggi top bar-mu
         child: const AppBarWidget(currentPage: 'Contact'),
       ),
       body: SingleChildScrollView(

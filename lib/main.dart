@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:purplio_roll/pages/vision_page.dart';
 import 'pages/home_page.dart';
 import 'pages/menu_page.dart';
 import 'pages/contact_page.dart';
@@ -21,7 +22,8 @@ class PurplioRollApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomePage(),
-        '/menu': (context) => const MenuPage(),       // Menghubungkan ke menu_page.dart di folder kamu
+        '/menu': (context) => const MenuPage(),
+        '/vision': (context) => const VisionPage(),       // Menghubungkan ke menu_page.dart di folder kamu
         '/contact': (context) => const ContactPage(), // Menghubungkan ke contact_page.dart di folder kamu
       },
     );

@@ -4,15 +4,60 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
 
-  // Fungsi otomatis mengirim pesan pesanan spesifik menu ke WhatsApp
-  Future<void> _orderMenuViaWhatsApp(String menuName) async {
-    final String message = "Halo Purplio Roll, saya ingin memesan menu: $menuName";
-    final Uri url = Uri.parse("https://wa.me/6285718727758?text=${Uri.encodeComponent(message)}");
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      throw Exception('Tidak dapat membuka WhatsApp');
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  // Indeks item yang sedang disentuh (untuk micro-interaction)
+  int _hoveredIndex = -1;
+
+  // Daftar Menu Purplio Roll yang padat, rapi, dan konstan
+  final List<Map<String, dynamic>> _menuItems = [
+    {
+      'name': 'Purplio Choco Glaze',
+      'desc': 'Ubi roll renyah disiram Belgian dark chocolate glaze melimpah.',
+      'price': '\$4.50',
+      'isBestSeller': false,
+      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+    },
+    {
+      'name': 'Purplio Cheese Melt',
+      'desc': 'Sweet-savory dengan gooey melted white cheddar dan sea salt.',
+      'price': '\$4.75',
+      'isBestSeller': true,
+      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+    },
+    {
+      'name': 'Purplio Matcha Crunch',
+      'desc': 'Dusting matcha premium dengan taburan renyah almond slivers.',
+      'price': '\$5.00',
+      'isBestSeller': false,
+      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+    },
+    {
+      'name': 'Purplio Original',
+      'desc': 'Murni kelembutan pasta ubi ungu organik dalam kulit super krispi.',
+      'price': '\$4.00',
+      'isBestSeller': false,
+      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+    },
+  ];
+
+  // Fungsi pengiriman format pesan instan otomatis ke WhatsApp
+  Future<void> _orderViaWhatsApp(String productName) async {
+    final String message = "Halo Purplio Roll, saya ingin memesan varian menu: $productName";
+    final Uri whatsappUrl = Uri.parse("https://wa.me/62895367000275?text=${Uri.encodeComponent(message)}");
+    
+    if (!await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal membuka WhatsApp. Pastikan aplikasi terinstal.')),
+        );
+      }
     }
   }
 
@@ -20,16 +65,16 @@ class MenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(83), // Sesuaikan dengan tinggi top bar-mu
         child: const AppBarWidget(currentPage: 'Menu'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 80),
+            const SizedBox(height: 16),
             _buildConceptSection(),
             _buildMenuSection(),
-            _buildCTASection(context), // Mengirim context untuk navigasi
+            _buildCTASection(context),
             const FooterWidget(),
           ],
         ),
@@ -37,13 +82,15 @@ class MenuPage extends StatelessWidget {
     );
   }
 
+  // 1. CONCEPT SECTION: Dibuat lebih padat ruang, hemat tempat, dan rapi
   Widget _buildConceptSection() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
               color: const Color(0xFFF0DBFF),
               borderRadius: BorderRadius.circular(24),
@@ -51,124 +98,71 @@ class MenuPage extends StatelessWidget {
             child: Text(
               'THE CONCEPT',
               style: GoogleFonts.spaceGrotesk(
-                fontSize: 12,
+                fontSize: 10,
                 color: const Color(0xFF341452),
-                fontWeight: FontWeight.w400,
-                height: 1.33,
-                letterSpacing: 1.20,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           Text(
-            'Lumpia Ubi Ungu\nReinvented.',
+            'Lumpia Ubi Ungu Reinvented.',
             style: GoogleFonts.epilogue(
-              fontSize: 48,
+              fontSize: 32,
               fontWeight: FontWeight.w800,
               color: const Color(0xFF341452),
-              height: 1.10,
-              letterSpacing: -1.44,
+              letterSpacing: -1.0,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           RichText(
             text: TextSpan(
               style: GoogleFonts.plusJakartaSans(
-                fontSize: 16,
+                fontSize: 14,
                 color: const Color(0xFF4B444F),
-                height: 1.50,
+                height: 1.4,
               ),
               children: [
                 const TextSpan(
-                  text:
-                      'At Purplio Roll, we take the traditional Lumpia and elevate it into a modern dessert masterpiece. Our signature ',
+                  text: 'At Purplio Roll, we take the traditional Lumpia and elevate it into a modern dessert masterpiece. Our signature ',
                 ),
                 TextSpan(
                   text: 'Ubi Ungu',
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
                     fontStyle: FontStyle.italic,
                     color: const Color(0xFF341452),
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const TextSpan(
-                  text:
-                      ' (Purple Yam) filling is creamy, vibrant, and wrapped in a delicate, shattered-glass crispy shell. It is a symphony of textures - smooth, crunchy, and indulgent.',
+                  text: ' filling is creamy, vibrant, wrapped in a delicate crispy shell air-fried to perfection.',
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              const Icon(Icons.verified, color: Color(0xFF341452), size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'Always Fresh',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 12,
-                  color: const Color(0xFF341452),
-                  fontWeight: FontWeight.w400,
-                  height: 1.33,
-                ),
-              ),
-              const SizedBox(width: 16),
-              const Icon(
-                Icons.auto_awesome,
-                color: Color(0xFF341452),
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Artisan Crafted',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 12,
-                  color: const Color(0xFF341452),
-                  fontWeight: FontWeight.w400,
-                  height: 1.33,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
+          // Mengurangi tinggi container banner agar tidak boros layar kosong
           Container(
             width: double.infinity,
-            height: 400,
+            height: 220, 
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white, width: 4),
-              color: Colors.grey[300],
-              boxShadow: const [
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
                 BoxShadow(
-                  color: Color(0x19000000),
+                  // ignore: deprecated_member_use
+                  color: Colors.black.withOpacity(0.05),
                   blurRadius: 10,
-                  offset: Offset(0, 8),
-                  spreadRadius: -6,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Image.network(
-              'https://imgur.com/AGZkpHO',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.image, size: 80, color: Colors.grey),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Gagal memuat gambar',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],
@@ -176,219 +170,204 @@ class MenuPage extends StatelessWidget {
     );
   }
 
+  // 2. SIGNATURE MENU SECTION: Menggunakan GridView 2 Kolom (Sangat Padat & Simpel)
   Widget _buildMenuSection() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Signature Flavors',
             style: GoogleFonts.epilogue(
-              fontSize: 24,
-              fontWeight: FontWeight.w400,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
               color: const Color(0xFF341452),
-              height: 1.50,
             ),
           ),
-          const SizedBox(height: 8),
           Text(
             'Choose your perfect purple companion.',
             style: GoogleFonts.plusJakartaSans(
-              fontSize: 16,
-              color: const Color(0xFF4B444F),
-              height: 1.50,
+              fontSize: 13,
+              color: const Color(0xFF6B6370),
             ),
           ),
-          const SizedBox(height: 32),
-          _buildMenuItem(
-            'Purplio Choco Glaze',
-            'Our signature ubi roll drenched in rich Belgian dark chocolate glaze and cocoa nibs.',
-            '\$4.50',
-            false,
-          ),
-          const SizedBox(height: 16),
-          _buildMenuItem(
-            'Purplio Cheese Melt',
-            'Sweet meets savory with a gooey melted white cheddar topping and sea salt sprinkles.',
-            '\$4.75',
-            true,
-          ),
-          const SizedBox(height: 16),
-          _buildMenuItem(
-            'Purplio Matcha Crunch',
-            'Ceremonial grade matcha dusting over crunchy almond slivers and purple yam…',
-            '\$5.00',
-            false,
-          ),
-          const SizedBox(height: 16),
-          _buildMenuItem(
-            'Purplio Original',
-            'Pure, unadulterated purple yam filling in our world-famous extra-crispy shell.',
-            '\$4.00',
-            false,
-          ),
-        ],
-      ),
-    );
-  }
+          const SizedBox(height: 20),
+          
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _menuItems.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,         // 2 menu sejajar ke samping kanan-kiri
+              crossAxisSpacing: 12,      // Jarak horizontal antar kotak menu
+              mainAxisSpacing: 12,       // Jarak vertikal antar kotak menu
+              mainAxisExtent: 275,       // Kunci tinggi boks menu agar seragam dan presisi
+            ),
+            itemBuilder: (context, index) {
+              final item = _menuItems[index];
+              final isHovered = _hoveredIndex == index;
 
-  Widget _buildMenuItem(
-    String name,
-    String description,
-    String price,
-    bool isBestSeller,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFF3E8FF)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x0C000000),
-            blurRadius: 2,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 256,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: const Center(
-                  child: Icon(Icons.image, size: 60, color: Colors.grey),
-                ),
-              ),
-              if (isBestSeller)
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF341452),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Text(
-                      'BEST SELLER',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        height: 1.50,
-                        letterSpacing: -0.50,
-                      ),
-                    ),
-                  ),
-                ),
-              Positioned(
-                top: 16,
-                right: 16,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
+              return MouseRegion(
+                onEnter: (_) => setState(() => _hoveredIndex = index),
+                onExit: (_) => setState(() => _hoveredIndex = -1),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFCD400),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Text(
-                    price,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 12,
-                      color: const Color(0xFF6E5C00),
-                      fontWeight: FontWeight.w400,
-                      height: 1.33,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isHovered ? const Color(0xFFBA96DB) : const Color(0xFFF3E8FF),
+                      width: 1.5,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: Colors.black.withOpacity(isHovered ? 0.06 : 0.02),
+                        blurRadius: isHovered ? 10 : 4,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: GoogleFonts.epilogue(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF341452),
-                    height: 1.40,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  description,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14,
-                    color: const Color(0xFF4B444F),
-                    height: 1.43,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Membungkus tombol dengan InkWell untuk mengaktifkan aksi klik tanpa merubah gaya/tampilan boks tombol
-                InkWell(
-                  onTap: () => _orderMenuViaWhatsApp(name),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF6F3F4),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Add to Box',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 16,
-                            color: const Color(0xFF341452),
-                            fontWeight: FontWeight.w700,
-                            height: 1.50,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Foto Mini Menu
+                      Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            height: 120,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                              child: Image.network(
+                                item['image'] as String,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
+                          if (item['isBestSeller'] as bool)
+                            Positioned(
+                              top: 8,
+                              left: 8,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF341452),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  'BEST',
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 9,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFCD400),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                item['price'] as String,
+                                style: GoogleFonts.spaceGrotesk(
+                                  fontSize: 10,
+                                  color: const Color(0xFF6E5C00),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Detail Informasi Menu
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['name'] as String,
+                              style: GoogleFonts.epilogue(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF341452),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item['desc'] as String,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 10,
+                                color: const Color(0xFF6B6370),
+                                height: 1.3,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            // Tombol Add to Box yang diaktifkan fungsinya
+                            InkWell(
+                              onTap: () => _orderViaWhatsApp(item['name'] as String),
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isHovered ? const Color(0xFFF0DBFF) : const Color(0xFFF6F3F4),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Add to Box',
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 12,
+                                        color: const Color(0xFF341452),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Icon(Icons.add_rounded, color: Color(0xFF341452), size: 14),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.add, color: Color(0xFF341452), size: 20),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ],
       ),
     );
   }
 
+  // 3. CTA CARD SECTION: Dibuat Simpel, Ringkas, Padat Ruang
   Widget _buildCTASection(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(24),
-      padding: const EdgeInsets.all(48),
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: const Color(0xFF4B2C69),
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
         children: [
@@ -396,64 +375,69 @@ class MenuPage extends StatelessWidget {
             'Sweeten your day with Purplio.',
             textAlign: TextAlign.center,
             style: GoogleFonts.epilogue(
-              fontSize: 32,
-              fontWeight: FontWeight.w400,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
               color: Colors.white,
-              height: 1,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
           Text(
-            'Visit any of our boutique locations or order a custom box online for local delivery. Every roll is air-fried to order for maximum crunch.',
+            'Visit any of our boutique locations or order a custom box online for local delivery. Air-fried to order for maximum crunch.',
             textAlign: TextAlign.center,
             style: GoogleFonts.plusJakartaSans(
-              fontSize: 16,
+              fontSize: 13,
               color: const Color(0xFFBA96DB),
-              height: 1.50,
+              height: 1.4,
             ),
           ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () => _orderMenuViaWhatsApp("Custom Box (Purplio Day)"), // Mengaktifkan pesanan custom ke WhatsApp
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFCD400),
-              minimumSize: const Size(double.infinity, 64),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
+          const SizedBox(height: 20),
+          // Mengubah tombol menjadi berdampingan (Row) agar menghemat space layar vertikal
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => _orderViaWhatsApp("Custom Box (Menu CTA)"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFCD400),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Text(
+                    'Get a Box',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF221B00),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            child: Text(
-              'Get a Box',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF221B00),
-                height: 1.56,
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/contact'); // Mengaktifkan fungsi temukan lokasi kontak rute
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: const BorderSide(color: Color(0xFFBA96DB), width: 1.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Text(
+                    'Find Locations',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFFBA96DB),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          OutlinedButton(
-            onPressed: () {
-              // Navigasi ke halaman ContactPage menggunakan Route yang telah didaftarkan
-              Navigator.pushNamed(context, '/contact');
-            },
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 64),
-              side: const BorderSide(color: Color(0xFFBA96DB), width: 2),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
-            child: Text(
-              'Find Locations',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFFBA96DB),
-                height: 1.56,
-              ),
-            ),
+            ],
           ),
         ],
       ),

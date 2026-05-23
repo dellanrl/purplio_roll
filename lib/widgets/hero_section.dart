@@ -1,279 +1,270 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HeroSection extends StatelessWidget {
+class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
+
+  @override
+  State<HeroSection> createState() => _HeroSectionState();
+}
+
+class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStateMixin {
+  late final AnimationController _floatingController;
+  bool _isBtn1Hovered = false;
+  bool _isBtn2Hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Animasi kartu Best Seller bergerak naik-turun perlahan agar interaktif
+    _floatingController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _floatingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      constraints: const BoxConstraints(minHeight: 795),
+      // Mengubah warna background menjadi lebih clean & fresh
       decoration: const BoxDecoration(color: Color(0xFFFCF8F9)),
       child: Stack(
         children: [
-          // Background decorative elements
+          // Lingkaran dekoratif latar belakang (Ukurannya diperkecil agar tidak makan tempat)
           Positioned(
-            top: -96,
-            right: -96,
+            top: -50,
+            right: -50,
             child: Container(
-              width: 384,
-              height: 384,
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
-                color: const Color(0xFFF0DBFF).withOpacity(0.3),
+                color: const Color(0xFFF0DBFF).withOpacity(0.4),
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: MediaQuery.of(context).size.width * 0.25,
-            child: Container(
-              width: 256,
-              height: 256,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE9C400).withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          // Content
+          
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40),
-                // Badge
+                // 1. Badge Terkini (Dibuat lebih minimalis)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFFE8DFF2),
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                   child: Text(
                     'LIMITED EDITION FLAVORS',
                     style: GoogleFonts.spaceGrotesk(
-                      fontSize: 12,
+                      fontSize: 10,
                       color: const Color(0xFF4A4453),
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                // Headline
+                const SizedBox(height: 16), // Jarak disempitkan agar padat
+
+                // 2. Headline Judul Utama
                 RichText(
                   text: TextSpan(
                     style: GoogleFonts.epilogue(
-                      fontSize: 48,
+                      fontSize: 38, // Dioptimalkan agar pas di layar mobile
                       fontWeight: FontWeight.w800,
                       color: const Color(0xFF341452),
-                      height: 1.25,
-                      letterSpacing: -1.44,
+                      height: 1.2,
+                      letterSpacing: -1.0,
                     ),
-                    children: [
-                      const TextSpan(text: 'Revolusi Rasa\ndalam '),
+                    children: const [
+                      TextSpan(text: 'Revolusi Rasa\ndalam '),
                       TextSpan(
-                        text: 'Gulungan\n',
-                        style: GoogleFonts.epilogue(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF341452),
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'Ungu',
-                        style: GoogleFonts.epilogue(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w800,
-                          color: const Color(0xFF341452),
-                        ),
+                        text: 'Gulungan Ungu',
+                        style: TextStyle(color: Color(0xFF4B2C69)),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                // Description
+                const SizedBox(height: 12),
+
+                // 3. Deskripsi Singkat
                 Text(
-                  'Nikmati sensasi krispi lumpia ubi ungu premium yang dibuat dengan cinta. Perpaduan sempurna antara tekstur renyah dan kelembutan manis ubi ungu organik yang autentik.',
+                  'Nikmati sensasi krispi lumpia ubi ungu premium yang dibuat dengan cinta. Perpaduan sempurna antara tekstur renyah dan kelembutan manis ubi ungu organik.',
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 18,
-                    color: const Color(0xFF4B444F),
-                    height: 1.6,
+                    fontSize: 15,
+                    color: const Color(0xFF5C5461),
+                    height: 1.5,
                   ),
                 ),
-                const SizedBox(height: 32),
-                // CTA Buttons
-                Column(
+                const SizedBox(height: 24),
+
+                // 4. Tombol Berdampingan (Row) - Menghemat Space Vertikal Secara Drastis
+                Row(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/menu');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFCD400),
-                        minimumSize: const Size(double.infinity, 64),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 10,
-                        shadowColor: const Color(0xFF705D00).withOpacity(0.1),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Lihat Menu Kami',
-                            style: GoogleFonts.spaceGrotesk(
-                              fontSize: 18,
-                              color: const Color(0xFF6E5C00),
-                              fontWeight: FontWeight.w400,
-                              height: 1.56,
+                    Expanded(
+                      child: MouseRegion(
+                        onEnter: (_) => setState(() => _isBtn1Hovered = true),
+                        onExit: (_) => setState(() => _isBtn1Hovered = false),
+                        child: AnimatedScale(
+                          scale: _isBtn1Hovered ? 1.03 : 1.0,
+                          duration: const Duration(milliseconds: 150),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/menu');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFCD400),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Menu',
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 16,
+                                    color: const Color(0xFF221B00),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Icon(Icons.arrow_forward_rounded, color: Color(0xFF221B00), size: 18),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          const Icon(
-                            Icons.arrow_forward,
-                            color: Color(0xFF6E5C00),
-                            size: 20,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    OutlinedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/menu');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Menampilkan Promo Spesial Hari Ini!')),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 64),
-                        side: const BorderSide(
-                          color: Color(0xFFCDC3D0),
-                          width: 1,
-                        ),
-                        backgroundColor: Colors.white.withOpacity(0.7),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        'Cek Promo Hari Ini',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 18,
-                          color: const Color(0xFF341452),
-                          fontWeight: FontWeight.w400,
-                          height: 1.56,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: MouseRegion(
+                        onEnter: (_) => setState(() => _isBtn2Hovered = true),
+                        onExit: (_) => setState(() => _isBtn2Hovered = false),
+                        child: AnimatedScale(
+                          scale: _isBtn2Hovered ? 1.03 : 1.0,
+                          duration: const Duration(milliseconds: 150),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/menu');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Menampilkan Promo Spesial Hari Ini!')),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 18),
+                              side: const BorderSide(color: Color(0xFF341452), width: 1.5),
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: Text(
+                              'Cek Promo',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 16,
+                                color: const Color(0xFF341452),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 48),
-                // Hero Image
+                const SizedBox(height: 32),
+
+                // 5. Kotak Foto Utama (Ukurannya disesuaikan agar proporsional dan tidak kosong)
                 Stack(
+                  clipBehavior: Clip.none,
                   children: [
                     Container(
                       width: double.infinity,
-                      height: 600,
+                      height: 340, // Diperkecil dari 600 agar tampilan padat dan pas satu layar HP
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: Colors.white, width: 8),
-                        boxShadow: const [
+                        boxShadow: [
                           BoxShadow(
-                            color: Color(0x4C341452),
-                            blurRadius: 50,
-                            offset: Offset(0, 25),
-                            spreadRadius: -12,
+                            // ignore: deprecated_member_use
+                            color: const Color(0xFF341452).withOpacity(0.12),
+                            blurRadius: 30,
+                            offset: const Offset(0, 15),
                           ),
                         ],
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(24),
                         child: Image.network(
-                          // MENGGUNAKAN SERVER POSTIMAGES (TIDAK TERBLOKIR DI INDONESIA)
                           'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                            return Container(
+                              color: Color(0xFFE8DFF2),
+                              child: Center(child: Icon(Icons.broken_image, size: 40, color: Colors.grey)),
                             );
                           },
                         ),
                       ),
                     ),
-                    Positioned(
-                      left: -24,
-                      bottom: 110,
+                    
+                    // Badge Informasi Mengambang Interaktif
+                    AnimatedBuilder(
+                      animation: _floatingController,
+                      builder: (context, child) {
+                        return Positioned(
+                          right: 16,
+                          bottom: -16 + (_floatingController.value * 8), // Bergerak halus
+                          child: child!,
+                        );
+                      },
                       child: Container(
-                        constraints: const BoxConstraints(maxWidth: 200),
-                        padding: const EdgeInsets.all(24),
+                        constraints: const BoxConstraints(maxWidth: 180),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
-                            width: 1,
-                          ),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
-                              color: Color(0x19000000),
+                              // ignore: deprecated_member_use
+                              color: Colors.black.withOpacity(0.08),
                               blurRadius: 10,
-                              offset: Offset(0, 8),
-                              spreadRadius: -6,
-                        ),
-                        BoxShadow(
-                          color: Color(0x19000000),
-                          blurRadius: 25,
-                          offset: Offset(0, 20),
-                          spreadRadius: -5,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: Color(0xFF705D00),
-                              size: 20,
+                              offset: const Offset(0, 4),
                             ),
-                            const SizedBox(width: 8),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.star_rounded, color: Color(0xFFFCD400), size: 20),
+                            const SizedBox(width: 6),
                             Text(
-                              'Best Seller',
+                              'Best Seller #1',
                               style: GoogleFonts.plusJakartaSans(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
                                 color: const Color(0xFF341452),
-                                height: 1.5,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Original Purplio Roll dengan saus karamel premium.',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 14,
-                            color: const Color(0xFF4B444F),
-                            height: 1.63,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 40),
+                const SizedBox(height: 16),
               ],
             ),
           ),

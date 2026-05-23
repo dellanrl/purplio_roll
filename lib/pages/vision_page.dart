@@ -9,10 +9,13 @@ class VisionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80), // Sesuaikan dengan tinggi top bar-mu
+        child: const AppBarWidget(currentPage: 'Vision'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AppBarWidget(currentPage: 'Vision'),
             const SizedBox(height: 80),
             _buildOriginStory(),
             _buildVisionStatement(),

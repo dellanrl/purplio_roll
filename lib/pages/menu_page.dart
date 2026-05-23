@@ -10,7 +10,7 @@ class MenuPage extends StatelessWidget {
   // Fungsi otomatis mengirim pesan pesanan spesifik menu ke WhatsApp
   Future<void> _orderMenuViaWhatsApp(String menuName) async {
     final String message = "Halo Purplio Roll, saya ingin memesan menu: $menuName";
-    final Uri url = Uri.parse("https://wa.me/62895367000275?text=${Uri.encodeComponent(message)}");
+    final Uri url = Uri.parse("https://wa.me/6285718727758?text=${Uri.encodeComponent(message)}");
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Tidak dapat membuka WhatsApp');
     }
@@ -19,10 +19,13 @@ class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: const AppBarWidget(currentPage: 'Menu'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AppBarWidget(currentPage: 'Menu'),
             const SizedBox(height: 80),
             _buildConceptSection(),
             _buildMenuSection(),

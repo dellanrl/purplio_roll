@@ -11,10 +11,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80), // Sesuaikan dengan tinggi top bar-mu
+        child: const AppBarWidget(currentPage: 'Home'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: const [
-            AppBarWidget(currentPage: 'Home'),
             HeroSection(),
             WhyPurplioSection(),
             NewsletterSection(),

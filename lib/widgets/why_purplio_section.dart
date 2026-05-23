@@ -1,235 +1,151 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class WhyPurplioSection extends StatelessWidget {
+class WhyPurplioSection extends StatefulWidget {
   const WhyPurplioSection({super.key});
+
+  @override
+  State<WhyPurplioSection> createState() => _WhyPurplioSectionState();
+}
+
+class _WhyPurplioSectionState extends State<WhyPurplioSection> {
+  int _hoveredIndex = -1;
+
+  // Menggunakan ikon universal standar yang dijamin 100% aman dari error versi SDK
+  final List<Map<String, dynamic>> _features = [
+    {
+      'icon': Icons.local_fire_department_rounded, // Representasi hawa panas air-fryer
+      'title': '100% Air-Fried',
+      'desc': 'Tidak digoreng minyak, melainkan di-airfryer agar krispi maksimal & bebas kolesterol.',
+    },
+    {
+      'icon': Icons.eco_rounded,
+      'title': 'Ubi Ungu Organik',
+      'desc': 'Dibuat murni dari ubi ungu organik pilihan tanpa pemanis buatan.',
+    },
+    {
+      'icon': Icons.bolt_rounded,
+      'title': 'Freshly Baked',
+      'desc': 'Diproduksi setiap hari secara higienis untuk menjaga mutu tekstur krispi.',
+    },
+    {
+      'icon': Icons.workspace_premium_rounded,
+      'title': 'Rasa Premium',
+      'desc': 'Perpaduan resep tradisional lumpia yang dielevasi dengan topping kekinian.',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+      color: const Color(0xFFFCF8F9),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header minimalis dan hemat tempat
           Text(
-            'Mengapa Purplio Roll?',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.epilogue(
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF341452),
-              height: 1.20,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            width: 96,
-            height: 4,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFCD400),
-              borderRadius: BorderRadius.circular(9999),
-            ),
-          ),
-          const SizedBox(height: 64),
-          // Bento Card 1 - Bahan Organik
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFF3E8FF), width: 1),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Bahan\nOrganik\nPilihan',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF341452),
-                    height: 1.30,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Kami menggunakan ubi ungu pilihan dari petani lokal yang diproses dengan standar kebersihan tertinggi untuk menjaga nutrisi dan rasa alaminya.',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    color: const Color(0xFF4B444F),
-                    height: 1.50,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.grey[300],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        'https://i.imgur.com/qW9HYOv.png',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Icon(
-                                Icons.image,
-                                size: 60,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Bento Card 2 - Sehat & Bergizi
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
+            'MENGAPA PURPLIO?',
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 12,
               color: const Color(0xFF4B2C69),
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.health_and_safety,
-                  color: Color(0xFFFCD400),
-                  size: 40,
-                ),
-                const SizedBox(height: 197),
-                Text(
-                  'Sehat &\nBergizi',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    height: 1.30,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Kaya akan antioksidan antosianin yang baik untuk kesehatan tubuh Anda.',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    color: const Color(0xFFBA96DB),
-                    height: 1.50,
-                  ),
-                ),
-              ],
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.5,
             ),
           ),
-          const SizedBox(height: 16),
-          // Bento Card 3 - Aesthetic Experience
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFCD400),
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.auto_awesome,
-                  color: Color(0xFF6E5C00),
-                  size: 40,
-                ),
-                const SizedBox(height: 185),
-                Text(
-                  'Aesthetic\nExperience',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF6E5C00),
-                    height: 1.30,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Tidak hanya lezat, setiap porsi didesain untuk menjadi momen yang Instagrammable.',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    color: const Color(0xFF6E5C00),
-                    height: 1.50,
-                  ),
-                ),
-              ],
+          const SizedBox(height: 8),
+          Text(
+            'Ngemil Enak Tanpa Ragu',
+            style: GoogleFonts.epilogue(
+              fontSize: 26,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF341452),
+              letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 16),
-          // Bento Card 4 - Inovasi Rasa
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(
-              top: 32,
-              left: 26,
-              right: 32,
-              bottom: 32,
+          const SizedBox(height: 20),
+
+          // Grid Layout 2x2: Memotong space kosong ke bawah secara drastis
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _features.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,         // Menampilkan 2 boks sejajar ke samping
+              crossAxisSpacing: 12,      // Jarak horizontal antar boks
+              mainAxisSpacing: 12,       // Jarak vertikal antar boks
+              mainAxisExtent: 145,       // Mengunci tinggi boks agar padat dan rapi
             ),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFF3E8FF), width: 1),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.grey[300],
+            itemBuilder: (context, index) {
+              final item = _features[index];
+              final isHovered = _hoveredIndex == index;
+
+              return MouseRegion(
+                onEnter: (_) => setState(() => _hoveredIndex = index),
+                onExit: (_) => setState(() => _hoveredIndex = -1),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: isHovered ? const Color(0xFFF3E8FF) : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isHovered ? const Color(0xFFBA96DB) : const Color(0xFFF3E8FF),
+                      width: 1.5,
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        'https://i.imgur.com/qW9HYOv.png',
-                        fit: BoxFit.cover,
+                    boxShadow: [
+                      BoxShadow(
+                        color: isHovered 
+                            ? const Color(0xFF341452).withOpacity(0.08) 
+                            : const Color(0xFF341452).withOpacity(0.03), // Memperbaiki penulisan const dengan opacity
+                        blurRadius: isHovered ? 12 : 6,
+                        offset: const Offset(0, 4),
                       ),
-                    ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: isHovered ? const Color(0xFF341452) : const Color(0xFFF0DBFF),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          item['icon'] as IconData,
+                          color: isHovered ? const Color(0xFFFCD400) : const Color(0xFF341452),
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        item['title'] as String,
+                        style: GoogleFonts.epilogue(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF341452),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Expanded(
+                        child: Text(
+                          item['desc'] as String,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 11,
+                            color: const Color(0xFF6B6370),
+                            height: 1.3,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'Inovasi\nRasa\nTiada\nHenti',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF341452),
-                    height: 1.30,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Dari Matcha Lava hingga Choco Crunchy, kami terus berinovasi menciptakan topping yang melengkapi kelembutan ubi ungu.',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    color: const Color(0xFF4B444F),
-                    height: 1.50,
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
         ],
       ),

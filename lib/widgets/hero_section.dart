@@ -20,7 +20,7 @@ class HeroSection extends StatelessWidget {
               width: 384,
               height: 384,
               decoration: BoxDecoration(
-                color: const Color(0xFFF0DBFF).withValues(alpha: 0.3),
+                color: const Color(0xFFF0DBFF).withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
             ),
@@ -32,7 +32,7 @@ class HeroSection extends StatelessWidget {
               width: 256,
               height: 256,
               decoration: BoxDecoration(
-                color: const Color(0xFFE9C400).withValues(alpha: 0.2),
+                color: const Color(0xFFE9C400).withOpacity(0.2),
                 shape: BoxShape.circle,
               ),
             ),
@@ -111,7 +111,9 @@ class HeroSection extends StatelessWidget {
                 Column(
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/menu');
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFCD400),
                         minimumSize: const Size(double.infinity, 64),
@@ -119,9 +121,7 @@ class HeroSection extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: 10,
-                        shadowColor: const Color(
-                          0xFF705D00,
-                        ).withValues(alpha: 0.1),
+                        shadowColor: const Color(0xFF705D00).withOpacity(0.1),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -146,14 +146,19 @@ class HeroSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/menu');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Menampilkan Promo Spesial Hari Ini!')),
+                        );
+                      },
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 64),
                         side: const BorderSide(
                           color: Color(0xFFCDC3D0),
                           width: 1,
                         ),
-                        backgroundColor: Colors.white.withValues(alpha: 0.7),
+                        backgroundColor: Colors.white.withOpacity(0.7),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -180,11 +185,11 @@ class HeroSection extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(color: Colors.white, width: 8),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                            color: const Color(0x4C341452),
+                            color: Color(0x4C341452),
                             blurRadius: 50,
-                            offset: const Offset(0, 25),
+                            offset: Offset(0, 25),
                             spreadRadius: -12,
                           ),
                         ],
@@ -192,8 +197,14 @@ class HeroSection extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: Image.network(
-                          'https://i.imgur.com/AGZkpHO.png',
+                          // MENGGUNAKAN SERVER POSTIMAGES (TIDAK TERBLOKIR DI INDONESIA)
+                          'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png',
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -204,65 +215,65 @@ class HeroSection extends StatelessWidget {
                         constraints: const BoxConstraints(maxWidth: 200),
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: Colors.white.withOpacity(0.7),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: Colors.white.withOpacity(0.5),
                             width: 1,
                           ),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
-                              color: const Color(0x19000000),
+                              color: Color(0x19000000),
                               blurRadius: 10,
-                              offset: const Offset(0, 8),
+                              offset: Offset(0, 8),
                               spreadRadius: -6,
-                            ),
-                            BoxShadow(
-                              color: const Color(0x19000000),
-                              blurRadius: 25,
-                              offset: const Offset(0, 20),
-                              spreadRadius: -5,
-                            ),
-                          ],
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        BoxShadow(
+                          color: Color(0x19000000),
+                          blurRadius: 25,
+                          offset: Offset(0, 20),
+                          spreadRadius: -5,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  color: Color(0xFF705D00),
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Best Seller',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF341452),
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ],
+                            const Icon(
+                              Icons.star,
+                              color: Color(0xFF705D00),
+                              size: 20,
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(width: 8),
                             Text(
-                              'Original Purplio Roll dengan saus karamel premium.',
+                              'Best Seller',
                               style: GoogleFonts.plusJakartaSans(
-                                fontSize: 14,
-                                color: const Color(0xFF4B444F),
-                                height: 1.63,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF341452),
+                                height: 1.5,
                               ),
                             ),
                           ],
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Original Purplio Roll dengan saus karamel premium.',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            color: const Color(0xFF4B444F),
+                            height: 1.63,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 40),
+              ],
+            ),
+            const SizedBox(height: 40),
               ],
             ),
           ),

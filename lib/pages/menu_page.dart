@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
+
+  // Fungsi otomatis mengirim pesan pesanan spesifik menu ke WhatsApp
+  Future<void> _orderMenuViaWhatsApp(String menuName) async {
+    final String message = "Halo Purplio Roll, saya ingin memesan menu: $menuName";
+    final Uri url = Uri.parse("https://wa.me/62895367000275?text=${Uri.encodeComponent(message)}");
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Tidak dapat membuka WhatsApp');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +26,7 @@ class MenuPage extends StatelessWidget {
             const SizedBox(height: 80),
             _buildConceptSection(),
             _buildMenuSection(),
-            _buildCTASection(),
+            _buildCTASection(context), // Mengirim context untuk navigasi
             const FooterWidget(),
           ],
         ),
@@ -126,11 +136,11 @@ class MenuPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: Colors.white, width: 4),
               color: Colors.grey[300],
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
-                  color: const Color(0x19000000),
+                  color: Color(0x19000000),
                   blurRadius: 10,
-                  offset: const Offset(0, 8),
+                  offset: Offset(0, 8),
                   spreadRadius: -6,
                 ),
               ],
@@ -231,11 +241,11 @@ class MenuPage extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: const Color(0xFFF3E8FF)),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color(0x0C000000),
+            color: Color(0x0C000000),
             blurRadius: 2,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -331,29 +341,34 @@ class MenuPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF6F3F4),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Add to Box',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 16,
-                          color: const Color(0xFF341452),
-                          fontWeight: FontWeight.w700,
-                          height: 1.50,
+                // Membungkus tombol dengan InkWell untuk mengaktifkan aksi klik tanpa merubah gaya/tampilan boks tombol
+                InkWell(
+                  onTap: () => _orderMenuViaWhatsApp(name),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF6F3F4),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Add to Box',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 16,
+                            color: const Color(0xFF341452),
+                            fontWeight: FontWeight.w700,
+                            height: 1.50,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.add, color: Color(0xFF341452), size: 20),
-                    ],
+                        const SizedBox(width: 8),
+                        const Icon(Icons.add, color: Color(0xFF341452), size: 20),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -364,7 +379,7 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCTASection() {
+  Widget _buildCTASection(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(24),
       padding: const EdgeInsets.all(48),
@@ -386,7 +401,7 @@ class MenuPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'Visit any of our boutique locations or order a custom box online for local delivery. Every roll is fried to order for maximum crunch.',
+            'Visit any of our boutique locations or order a custom box online for local delivery. Every roll is air-fried to order for maximum crunch.',
             textAlign: TextAlign.center,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 16,
@@ -396,7 +411,7 @@ class MenuPage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => _orderMenuViaWhatsApp("Custom Box (Purplio Day)"), // Mengaktifkan pesanan custom ke WhatsApp
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFCD400),
               minimumSize: const Size(double.infinity, 64),
@@ -416,7 +431,10 @@ class MenuPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              // Navigasi ke halaman ContactPage menggunakan Route yang telah didaftarkan
+              Navigator.pushNamed(context, '/contact');
+            },
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, 64),
               side: const BorderSide(color: Color(0xFFBA96DB), width: 2),

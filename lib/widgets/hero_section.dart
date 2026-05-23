@@ -45,6 +45,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
               width: 200,
               height: 200,
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: const Color(0xFFF0DBFF).withOpacity(0.4),
                 shape: BoxShape.circle,
               ),

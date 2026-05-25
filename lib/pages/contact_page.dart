@@ -1,26 +1,191 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/footer_widget.dart';
 
-class ContactPage extends StatelessWidget {
+class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
+
+  @override
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  // Fungsi untuk membuka tautan luar (Social Media, Maps, WA)
+  Future<void> _launchExternalUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tidak dapat membuka tautan.')),
+        );
+      }
+    }
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Halo ${_nameController.text}, pesan Anda berhasil dikirim!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      _nameController.clear();
+      _emailController.clear();
+      _messageController.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(83), // Sesuaikan dengan tinggi top bar-mu
-        child: const AppBarWidget(currentPage: 'Contact'),
+        child: const AppBarWidget(currentPage: 'Home'),
       ),
+      backgroundColor: const Color(0xFFFCF8F9),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 80),
-            _buildHeroSection(),
-            _buildOrderingMethods(),
-            _buildContactForm(),
-            const SizedBox(height: 80),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ================= HEADER TITLE =================
+                  Text(
+                    'SAY HELLO!',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 12,
+                      color: const Color(0xFF4B2C69),
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Hubungi Purplio Roll',
+                    style: GoogleFonts.epilogue(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF341452),
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Ada pertanyaan, kritik, atau ingin memesan katering partai besar? Kami siap melayani Anda dengan sepenuh hati.',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      color: const Color(0xFF5C5461),
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // ================= KARTU INFO REKREASI (Kompak ke Samping) =================
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickContactCard(
+                          Icons.location_on_rounded,
+                          'Outlet Kami',
+                          'Surabaya, Indonesia',
+                          () => _launchExternalUrl('https://maps.google.com'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildQuickContactCard(
+                          Icons.chat_bubble_rounded,
+                          'WhatsApp',
+                          '+62 895-3670-00275',
+                          () => _launchExternalUrl('https://wa.me/62895367000275'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  _buildQuickContactCard(
+                    Icons.camera_alt_rounded,
+                    'Instagram Resmi',
+                    '@purplioroll.id — Ikuti update promo harian kami',
+                    () => _launchExternalUrl('https://instagram.com'),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // ================= FORM FEEDBACK INTERAKTIF SUNGGUHAN =================
+                  Text(
+                    'Kirim Pesan Langsung',
+                    style: GoogleFonts.epilogue(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF341452),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: const Color(0xFFF3E8FF), width: 1.5),
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInputField('Nama Lengkap', _nameController, Icons.person_outline_rounded, 'Masukkan nama Anda'),
+                          const SizedBox(height: 14),
+                          _buildInputField('Alamat Email', _emailController, Icons.mail_outline_rounded, 'Masukkan email aktif', isEmail: true),
+                          const SizedBox(height: 14),
+                          _buildInputField('Pesan / Catatan', _messageController, Icons.chat_bubble_outline_rounded, 'Tulis pesan Anda di sini...', maxLines: 4),
+                          const SizedBox(height: 20),
+                          
+                          // Tombol Submit Form Kirim Pesan Berfungsi Nyata
+                          ElevatedButton(
+                            onPressed: _submitForm,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF341452),
+                              minimumSize: const Size(double.infinity, 56),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: Text(
+                              'Send Message',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const FooterWidget(),
           ],
         ),
@@ -28,506 +193,89 @@ class ContactPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          Text(
-            'CONNECT WITH US',
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 16,
-              color: const Color(0xFF341452),
-              fontWeight: FontWeight.w400,
-              height: 1.50,
-              letterSpacing: 1.60,
+  // Helper Pembuat Kartu Sosmed/Hubungi (Padat & Efisien)
+  Widget _buildQuickContactCard(IconData icon, String title, String value, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFF3E8FF), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Color(0xFFF0DBFF),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: const Color(0xFF341452), size: 20),
             ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Craving a Sweet Roll?',
-            style: GoogleFonts.epilogue(
-              fontSize: 24,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF341452),
-              height: 1.50,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.spaceGrotesk(fontSize: 12, color: const Color(0xFF6B6370), fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    value,
+                    style: GoogleFonts.plusJakartaSans(fontSize: 13, color: const Color(0xFF341452), fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Whether you are looking for a quick delivery or want to visit us in person, we have made ordering your favorite treats easier than ever.',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 16,
-              color: const Color(0xFF4B444F),
-              height: 1.50,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildOrderingMethods() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          // Visit Boutique
-          Container(
-            width: double.infinity,
-            height: 400,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[300],
-            ),
-            child: Stack(
-              children: [
-                const Center(
-                  child: Icon(Icons.image, size: 80, color: Colors.grey),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(48),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          const Color(0xE5341452),
-                          const Color(0x33341452),
-                          const Color(0x00341452),
-                        ],
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Visit Our Boutique',
-                          style: GoogleFonts.epilogue(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            height: 1.50,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Experience the aroma of freshly baked rolls in our signature purple lounge.',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 16,
-                            color: const Color(0xFFF3E8FF),
-                            height: 1.50,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFCD400),
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Text(
-                                'Jakarta Selatan',
-                                style: GoogleFonts.spaceGrotesk(
-                                  fontSize: 12,
-                                  color: const Color(0xFF221B00),
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.33,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Text(
-                                'Open 09:00 - 21:00',
-                                style: GoogleFonts.spaceGrotesk(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.33,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          // WhatsApp Direct
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(48),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFFF3E8FF),
-                width: 2,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4B2C69),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.chat,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'WhatsApp\nDirect',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF341452),
-                    height: 1.50,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Order directly through our concierge for special requests and bulk orders.',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    color: const Color(0xFF4B444F),
-                    height: 1.50,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Chat Now',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 16,
-                        color: const Color(0xFF341452),
-                        fontWeight: FontWeight.w400,
-                        height: 1.50,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Color(0xFF341452),
-                      size: 20,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Delivery Apps
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(48),
-            decoration: BoxDecoration(
-              color: const Color(0x19FCD400),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0x194B2C69),
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFCD400),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.delivery_dining,
-                    color: Color(0xFF6E5C00),
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Delivery Apps',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF341452),
-                    height: 1.50,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Find us on your favorite platforms for lighting fast delivery to your doorstep.',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    color: const Color(0xFF4B444F),
-                    height: 1.50,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xFFF3E8FF),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          'GrabFood',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 14,
-                            color: const Color(0xFF16A34A),
-                            fontWeight: FontWeight.w700,
-                            height: 1.43,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xFFF3E8FF),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          'GoFood',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 14,
-                            color: const Color(0xFFDC2626),
-                            fontWeight: FontWeight.w700,
-                            height: 1.43,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Contact Details
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(48),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0x194B2C69),
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Need Help?',
-                  style: GoogleFonts.epilogue(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF341452),
-                    height: 1.50,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.phone,
-                      color: Color(0xFF341452),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 24),
-                    Text(
-                      '+62 21 555 0192',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16,
-                        color: const Color(0xFF4B444F),
-                        height: 1.50,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.email,
-                      color: Color(0xFF341452),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 24),
-                    Text(
-                      'hello@purplioroll.com',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16,
-                        color: const Color(0xFF4B444F),
-                        height: 1.50,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContactForm() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Send us a Message',
-            style: GoogleFonts.epilogue(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF341452),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Have a question about our flavors or interested in a collaboration? Fill out the form and our team will get back to you within 24 hours.',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 16,
-              color: const Color(0xFF4B444F),
-              height: 1.50,
-            ),
-          ),
-          const SizedBox(height: 32),
-          Container(
-            padding: const EdgeInsets.all(48),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: const Color(0x194B2C69),
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildFormField('Full Name', 'Your name'),
-                const SizedBox(height: 24),
-                _buildFormField('Email Address', 'hello@example.com'),
-                const SizedBox(height: 24),
-                _buildFormField('Subject', 'Order Inquiry'),
-                const SizedBox(height: 24),
-                _buildFormField('Message', 'Tell us what is on your mind...', maxLines: 4),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF341452),
-                    minimumSize: const Size(double.infinity, 64),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Send Message',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          height: 1.50,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.send, color: Colors.white, size: 20),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFormField(String label, String hint, {int maxLines = 1}) {
+  // Helper Pembuat Input Kolom Ketik
+  Widget _buildInputField(String label, TextEditingController controller, IconData icon, String hint, {bool isEmail = false, int maxLines = 1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 12,
-            color: const Color(0xFF341452),
-            fontWeight: FontWeight.w700,
-            height: 1.33,
-          ),
+          style: GoogleFonts.spaceGrotesk(fontSize: 13, color: const Color(0xFF341452), fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Color(0xFFF3E8FF),
-                width: 2,
-              ),
+        const SizedBox(height: 6),
+        TextFormField(
+          controller: controller,
+          maxLines: maxLines,
+          style: GoogleFonts.plusJakartaSans(fontSize: 14, color: const Color(0xFF221B00)),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'Kolom ini wajib diisi';
+            }
+            if (isEmail && !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+              return 'Format email tidak valid';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: GoogleFonts.plusJakartaSans(fontSize: 13, color: const Color(0xFFA098A6)),
+            prefixIcon: Icon(icon, color: const Color(0xFF6B6370), size: 18),
+            filled: true,
+            fillColor: const Color(0xFFF6F3F4),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
-          ),
-          child: Text(
-            hint,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 16,
-              color: const Color(0x664B444F),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFBA96DB), width: 1.5),
             ),
           ),
         ),

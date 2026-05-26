@@ -22,40 +22,48 @@ class _MenuPageState extends State<MenuPage> {
       'desc': 'Ubi roll renyah disiram Belgian dark chocolate glaze melimpah.',
       'price': '\$4.50',
       'isBestSeller': false,
-      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+      'image': 'https://i.imgur.com/5dcWKF0.png',
     },
     {
       'name': 'Purplio Cheese Melt',
       'desc': 'Sweet-savory dengan gooey melted white cheddar dan sea salt.',
       'price': '\$4.75',
       'isBestSeller': true,
-      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+      'image': 'https://i.imgur.com/mQnweWM.png',
     },
     {
       'name': 'Purplio Matcha Crunch',
       'desc': 'Dusting matcha premium dengan taburan renyah almond slivers.',
       'price': '\$5.00',
       'isBestSeller': false,
-      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+      'image': 'https://i.imgur.com/rRjPNj6.png',
     },
     {
       'name': 'Purplio Original',
-      'desc': 'Murni kelembutan pasta ubi ungu organik dalam kulit super krispi.',
+      'desc':
+          'Murni kelembutan pasta ubi ungu organik dalam kulit super krispi.',
       'price': '\$4.00',
       'isBestSeller': false,
-      'image': 'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png'
+      'image': 'https://i.imgur.com/LJBIn97.png',
     },
   ];
 
   // Fungsi pengiriman format pesan instan otomatis ke WhatsApp
   Future<void> _orderViaWhatsApp(String productName) async {
-    final String message = "Halo Purplio Roll, saya ingin memesan varian menu: $productName";
-    final Uri whatsappUrl = Uri.parse("https://wa.me/62895367000275?text=${Uri.encodeComponent(message)}");
-    
+    final String message =
+        "Halo Purplio Roll, saya ingin memesan varian menu: $productName";
+    final Uri whatsappUrl = Uri.parse(
+      "https://wa.me/62895367000275?text=${Uri.encodeComponent(message)}",
+    );
+
     if (!await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication)) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Gagal membuka WhatsApp. Pastikan aplikasi terinstal.')),
+          const SnackBar(
+            content: Text(
+              'Gagal membuka WhatsApp. Pastikan aplikasi terinstal.',
+            ),
+          ),
         );
       }
     }
@@ -65,7 +73,9 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(83), // Sesuaikan dengan tinggi top bar-mu
+        preferredSize: const Size.fromHeight(
+          83,
+        ), // Sesuaikan dengan tinggi top bar-mu
         child: const AppBarWidget(currentPage: 'Menu'),
       ),
       body: SingleChildScrollView(
@@ -125,7 +135,8 @@ class _MenuPageState extends State<MenuPage> {
               ),
               children: [
                 const TextSpan(
-                  text: 'At Purplio Roll, we take the traditional Lumpia and elevate it into a modern dessert masterpiece. Our signature ',
+                  text:
+                      'At Purplio Roll, we take the traditional Lumpia and elevate it into a modern dessert masterpiece. Our signature ',
                 ),
                 TextSpan(
                   text: 'Ubi Ungu',
@@ -136,7 +147,8 @@ class _MenuPageState extends State<MenuPage> {
                   ),
                 ),
                 const TextSpan(
-                  text: ' filling is creamy, vibrant, wrapped in a delicate crispy shell air-fried to perfection.',
+                  text:
+                      ' filling is creamy, vibrant, wrapped in a delicate crispy shell air-fried to perfection.',
                 ),
               ],
             ),
@@ -145,7 +157,7 @@ class _MenuPageState extends State<MenuPage> {
           // Mengurangi tinggi container banner agar tidak boros layar kosong
           Container(
             width: double.infinity,
-            height: 220, 
+            height: 220,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
@@ -160,8 +172,33 @@ class _MenuPageState extends State<MenuPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
-                'https://i.postimg.cc/9M3XbX7W/AGZkpHO.png',
+                'https://i.imgur.com/LJBIn97.png',
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Gambar gagal dimuat',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -193,16 +230,17 @@ class _MenuPageState extends State<MenuPage> {
             ),
           ),
           const SizedBox(height: 20),
-          
+
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _menuItems.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,         // 2 menu sejajar ke samping kanan-kiri
-              crossAxisSpacing: 12,      // Jarak horizontal antar kotak menu
-              mainAxisSpacing: 12,       // Jarak vertikal antar kotak menu
-              mainAxisExtent: 275,       // Kunci tinggi boks menu agar seragam dan presisi
+              crossAxisCount: 2, // 2 menu sejajar ke samping kanan-kiri
+              crossAxisSpacing: 12, // Jarak horizontal antar kotak menu
+              mainAxisSpacing: 12, // Jarak vertikal antar kotak menu
+              mainAxisExtent:
+                  275, // Kunci tinggi boks menu agar seragam dan presisi
             ),
             itemBuilder: (context, index) {
               final item = _menuItems[index];
@@ -217,13 +255,17 @@ class _MenuPageState extends State<MenuPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isHovered ? const Color(0xFFBA96DB) : const Color(0xFFF3E8FF),
+                      color: isHovered
+                          ? const Color(0xFFBA96DB)
+                          : const Color(0xFFF3E8FF),
                       width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
                         // ignore: deprecated_member_use
-                        color: Colors.black.withOpacity(isHovered ? 0.06 : 0.02),
+                        color: Colors.black.withOpacity(
+                          isHovered ? 0.06 : 0.02,
+                        ),
                         blurRadius: isHovered ? 10 : 4,
                         offset: const Offset(0, 3),
                       ),
@@ -239,13 +281,29 @@ class _MenuPageState extends State<MenuPage> {
                             width: double.infinity,
                             height: 120,
                             decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(18),
+                              ),
                             ),
                             child: ClipRRect(
-                              borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(18),
+                              ),
                               child: Image.network(
                                 item['image'] as String,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.image_not_supported,
+                                        size: 40,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -254,7 +312,10 @@ class _MenuPageState extends State<MenuPage> {
                               top: 8,
                               left: 8,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF341452),
                                   borderRadius: BorderRadius.circular(12),
@@ -273,7 +334,10 @@ class _MenuPageState extends State<MenuPage> {
                             top: 8,
                             right: 8,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFCD400),
                                 borderRadius: BorderRadius.circular(12),
@@ -320,13 +384,18 @@ class _MenuPageState extends State<MenuPage> {
                             const SizedBox(height: 10),
                             // Tombol Add to Box yang diaktifkan fungsinya
                             InkWell(
-                              onTap: () => _orderViaWhatsApp(item['name'] as String),
+                              onTap: () =>
+                                  _orderViaWhatsApp(item['name'] as String),
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: isHovered ? const Color(0xFFF0DBFF) : const Color(0xFFF6F3F4),
+                                  color: isHovered
+                                      ? const Color(0xFFF0DBFF)
+                                      : const Color(0xFFF6F3F4),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(
@@ -341,7 +410,11 @@ class _MenuPageState extends State<MenuPage> {
                                       ),
                                     ),
                                     const SizedBox(width: 4),
-                                    const Icon(Icons.add_rounded, color: Color(0xFF341452), size: 14),
+                                    const Icon(
+                                      Icons.add_rounded,
+                                      color: Color(0xFF341452),
+                                      size: 14,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -418,11 +491,17 @@ class _MenuPageState extends State<MenuPage> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/contact'); // Mengaktifkan fungsi temukan lokasi kontak rute
+                    Navigator.pushNamed(
+                      context,
+                      '/contact',
+                    ); // Mengaktifkan fungsi temukan lokasi kontak rute
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(color: Color(0xFFBA96DB), width: 1.5),
+                    side: const BorderSide(
+                      color: Color(0xFFBA96DB),
+                      width: 1.5,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),

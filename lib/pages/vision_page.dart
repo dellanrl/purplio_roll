@@ -10,7 +10,9 @@ class VisionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(83), // Sesuaikan dengan tinggi top bar-mu
+        preferredSize: const Size.fromHeight(
+          83,
+        ), // Sesuaikan dengan tinggi top bar-mu
         child: const AppBarWidget(currentPage: 'Vision'),
       ),
       body: SingleChildScrollView(
@@ -112,8 +114,25 @@ class VisionPage extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Center(
-              child: Icon(Icons.image, size: 80, color: Colors.grey),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(48),
+              child: Image.network(
+                'https://i.imgur.com/LJBIn97.png',
+                width: double.infinity,
+                height: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -158,9 +177,7 @@ class VisionPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      decoration: const BoxDecoration(
-        color: Color(0xFF341452),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF341452)),
       child: Column(
         children: [
           Text(
@@ -250,17 +267,20 @@ class VisionPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMissionCard(IconData icon, String title, String description, Color bgColor, Color textColor) {
+  Widget _buildMissionCard(
+    IconData icon,
+    String title,
+    String description,
+    Color bgColor,
+    Color textColor,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(48),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: const Color(0x0C341452),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0x0C341452), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,8 +380,26 @@ class VisionPage extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Center(
-              child: Icon(Icons.image, size: 80, color: Colors.grey),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Image.network(
+                'https://i.imgur.com/Dyv43h7.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
